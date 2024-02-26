@@ -23,7 +23,7 @@ int main(){
     
     //변수 선언
     int w0, before_in, t, day, diet_in, diet_act;
-    int BEFORE_ACT = 0;
+    int before_act = 0;
     
     //입력
     cin >> w0 >> before_in >> t;
