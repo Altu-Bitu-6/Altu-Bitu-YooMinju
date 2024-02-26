@@ -21,7 +21,7 @@ int main(void)
     //문자열, Bool 형태
     for(int i = 0; i < n; i++) {
         cin >> str;
-        train.insert(pair<string, bool>(str, true));
+        train[str] = true;  //더욱 간단한 입력 방법
     }
 
     //테스트할 문자열을 맵으로 불러오기
