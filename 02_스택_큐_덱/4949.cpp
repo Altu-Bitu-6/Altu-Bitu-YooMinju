@@ -25,29 +25,31 @@ int main(){
         for (int i = 0; i < str.length(); i++){
             if (str[i] == '(' || str[i] == '[')
                 test.push(str[i]);
-
+            //대괄호 주의
             if (str[i] == ')') {
-                if(!test.empty() && test.top() == '(')
+                if (!test.empty() && test.top() == '(') {
                     test.pop();
-                else
+                } else {
                     result = false;
                     break;
+                }
             }
 
-            if (str[i] == ']') {
-                if(!test.empty() && test.top() == '[')
+            else if (str[i] == ']') {
+                if(!test.empty() && test.top() == '[') {
                     test.pop();
-                else
+                } else {
                     result = false;
                     break;
+                }
             }
         } 
 
     //스택이 비어있고 result가 참이면 성공
     if(test.empty() && result) {
-        cout << "yes";
+        cout << "yes\n";
     } else {
-        cout << "no";
+        cout << "no\n";
     }
 }
 return 0; 
