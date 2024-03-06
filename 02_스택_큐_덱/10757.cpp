@@ -30,9 +30,9 @@ string addNum(string a, string b) {
     }
 
     //올림값이 최종에 남았다면 마지막 값으로 스택 추가
-    if (carry > 0)
+    if (carry > 0){
         result.push(carry);
-
+    }
 
     string result_string;
     int size = result.size();
