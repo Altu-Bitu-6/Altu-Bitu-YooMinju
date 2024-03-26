@@ -11,29 +11,30 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
-int calcMin(int arr[]){
+int calcMin(vector<int> v){
     //초기값 설정
-    int res = arr[0];
+    int res = v[0];
 
     //배열 내에서 반복하며 res 값 계산
-    for (int i = 1; i < sizeof(arr) ; i++){
+    for (int i = 1; i < v.size() ; i++){
         //현재 속도가 크다면 대체
-        if (arr[i] > res){
-            res = arr[i];
+        if (res <= v[i]){
+            res = v[i];
         }
-        //현재 속도가 작거나 같다면 배수 계산해서 res 업데이트
+        //현재 속도가 작거나 같다면 배수인지 확인 -> res 업데이트
         else {
-            res = (res / arr[i] + 1) * res;
+            if (res % v[i] != 0) {
+                res = (res / v[i] + 1) * v[i];
+            }
         }
     }
-
+    
     return res;
 }
-
-
 
 
 int main(){
@@ -41,18 +42,18 @@ int main(){
 	cin.tie(NULL); cout.tie(NULL);
     
     //입력
-    int n, curr_speed, res;
-    int min_speed[] = {};
+    int n, res;
     cin >> n;
+    vector<int> min_speed(n);
 
     //역순으로 배열 생성
-    while (n--){
-        cin >> min_speed[n]; 
+    for (int i = 0; i < n; i++) {
+        cin >> min_speed[i];
     }
+    
+    reverse(min_speed.begin(), min_speed.end());
 
     //필요한 최소 속도 계산
-    res = calcMin(min_speed);
+    cout << calcMin(min_speed);
 
-    //출력
-    cout << res;
 }
