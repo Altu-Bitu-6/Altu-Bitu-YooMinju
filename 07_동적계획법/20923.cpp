@@ -4,56 +4,82 @@
     //2: checkWin - m번의 횟수가 끝나고 승자를 가리는 함수
 
 #include <iostream>
-#include <vector>
 #include <algorithm>
+#include <string>
+#include <deque>
 
 using namespace std;
 int n,m,d,s; //입력변수
-vector<int> dodo, suyeon; //도도와 수연이의 카드 (전역변수로 선언)
+string result;
+deque<int> dodo(n);
+deque<int> suyeon(n);
+deque<int> dodo_ground;
+deque<int> suyeon_ground;
+
+//카드 내려놓기
+void putCard(bool turn){
+    if (turn) {
+        dodo_ground.push_back(dodo.back());
+        dodo.pop_back();
+    } else {
+        suyeon_ground.push_back(suyeon.back());
+        suyeon.pop_back();
+    }
+}
 
 //수연이가 종을 쳤을 경우의 카드 이동
-void suyeonBell(int idx){
+void suyeonBell(){
     //카드 가져가기
-    suyeon.insert(suyeon.end(), dodo.begin(), dodo.begin()+idx+1);
-    suyeon.insert(suyeon.end(), suyeon.begin(), suyeon.begin()+idx+1);
+    //suyeon.insert(suyeon.end(), dodo.begin(), dodo.begin()+idx+1);
+    //suyeon.insert(suyeon.end(), suyeon.begin(), suyeon.begin()+idx+1);
 
     //카드 삭제
-    dodo.erase(dodo.begin(), dodo.begin()+idx+1);
-    suyeon.erase(suyeon.begin(), suyeon.begin()+idx+1);
+    //dodo.erase(dodo.begin(), dodo.begin()+idx+1);
+    //suyeon.erase(suyeon.begin(), suyeon.begin()+idx+1);
+    
+    while(dodo_ground.size() > 0){
+        suyeon.push_front(dodo_ground.front());
+        dodo_ground.pop_front();
+    }
+    while(suyeon_ground.size() > 0){
+        suyeon.push_front(suyeon_ground.front());
+        suyeon_ground.pop_front();
+    }
 }
 
 //도도가 종을 쳤을 경우의 카드 이동
-void dodoBell(int idx){
-    //카드 가져가기
-    dodo.insert(dodo.end(), suyeon.begin(), suyeon.begin()+idx+1);
-    dodo.insert(dodo.end(), dodo.begin(), dodo.begin()+idx+1);
-
-    //카드 삭제
-    dodo.erase(dodo.begin(), dodo.begin()+idx+1);
-    suyeon.erase(suyeon.begin(), suyeon.begin()+idx+1);
+void dodoBell(){
+    while(suyeon_ground.size() > 0){
+        dodo.push_front(suyeon_ground.front());
+        suyeon_ground.pop_front();
+    }
+    while(dodo_ground.size() > 0){
+        dodo.push_front(dodo_ground.front());
+        dodo_ground.pop_front();
+    }
 }
 
 //승자 확인
 string checkWin(){
-    
-    string s;
+    string str;
 
     if (dodo.size() > suyeon.size()){
-        s = "do";
+        str = "do";
     }
     if (dodo.size() < suyeon.size()){
-        s = "su";
+        str = "su";
     }
     if (dodo.size() == suyeon.size()){
-        s = "dosu";
+        str = "dosu";
     }
 
-    return s;
+    return str;
 }
 
 int main(){
     cin >> n >> m;
-
+    
+    
     //덱 생성
     for (int i = 0; i < n; i++){
         cin >> d >> s;
@@ -62,28 +88,45 @@ int main(){
     }
 
     //게임
-    for (int j = 0; j < m; j++) {
-        //빈 벡터인지 확인
+    int cnt = 0;
+    //dodo -> true / suyeon -> false
+    bool turn = true;
+    
+    while (cnt <= m){
+        cnt++;
+        
+        //카드 내려놓기
+        putCard(turn);
+        
+        //빈 덱인지 확인
         if (dodo.empty()){
-            cout << 'su';
+            result = "su";
+            break;
         } else if (suyeon.empty()){
-            cout << 'do';
+            result = "do";
+            break;
         }
-        //모두 카드가 있다면 게임 시작
-        else {
-            //수연이가 종을 치는 경우
-            if ((dodo[j]+suyeon[j]) == 5){
-                suyeonBell(j);
-            }
-            //도도가 종을 치는 경우
-            else if (dodo[j] == 5 || suyeon[j] == 5){
-                dodoBell(j);
-            }
-        }
-    }
 
-    //게임이 끝난 뒤
-    string result = checkWin();
+        //종 치는 경우 검사
+        //수연이가 종을 치는 경우
+        if (dodo_ground.size() && suyeon_ground.size() && dodo_ground.back()+suyeon_ground.back() == 5){
+            suyeonBell();
+        }
+        //도도가 종을 치는 경우
+        else if ((dodo_ground.size() && dodo_ground.back() == 5 )||(suyeon_ground.size() && suyeon_ground.back() == 5)){
+            dodoBell();
+        }
+        
+        //상대의 턴으로 변경
+        turn = !turn;
+    }
+    
+
+    if (cnt == m+1){
+        result = checkWin();
+    }
     //출력
     cout << result;
+    
+    return 0;
 }
