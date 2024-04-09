@@ -29,6 +29,7 @@ int bfs(int idx){
             if (computer[curr][i] == 1 && !visited[i]){
                 visited[i] = true;
                 q.push(i);
+                //방문할 때마다 영향받은 컴퓨터 개수 더해주기
                 num_virus++;
             }
         }
